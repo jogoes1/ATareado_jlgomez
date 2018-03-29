@@ -1,0 +1,8 @@
+<ATSCRIPT>
+    <cmd id="CIPMODE" setMode="1" params="1" />
+    <cmd id="CGACT" setMode="1" params="0|1" />
+    <cmd id="CIPSHUT" setMode="1" params="" />
+    <cmd id="CSTT" setMode="1" params="orangeworld|orange|orange" />
+    <cmd id="CIICR" setMode="1" params="" />
+    <cmd id="CIFSR" setMode="1" params="" />
+</ATSCRIPT>

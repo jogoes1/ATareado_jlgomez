@@ -57,6 +57,9 @@ class SerialWriter(object):
         while self.running:
             for x in range(0, self.__nrOfPacketsPerIteration):
                 self.sendData(self.__data)
+
+
+
             time.sleep(self.__delay)
 
             self.__repetitions -= 1

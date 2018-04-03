@@ -15,7 +15,7 @@ import Log
 import time
 from Log import logger
 from serialwriter import SerialWriter
-
+from baudRateGenerator import BaudRateGenerator
 
 SCRIPTS_PATH = './scripts/'
 LOCAL_PORT = 5001
@@ -38,6 +38,11 @@ class ATareado(form.MainFrame):
 
         self.__serialWriter = SerialWriter()
         self.__serialWriter.sendData = self.serialWritersendDataCallback
+
+        print("Instancia __baudrateGenerator")
+        self.__baudrateGenerator=BaudRateGenerator()
+        self.__baudrateGenerator.sendData = self.baudRateGeneratorSendDataCallback
+
 
         self.__socketRedirection = False
 
@@ -190,7 +195,10 @@ class ATareado(form.MainFrame):
                 throughput = int(throughput_txt)
             except:
                 throughput = 1
-        self.__serialWriter.start(throughput, duration)
+       # self.__serialWriter.start(throughput, duration)
+
+        print("self.__baudrateGenerator.start()")
+        self.__baudrateGenerator.start(throughput, duration)
 
     def serialstop_btnOnButtonClick(self, event):
         self.__serialWriter.stop()
@@ -336,8 +344,13 @@ class ATareado(form.MainFrame):
         self.m_staticText1.SetLabel(text)
 
     def serialWritersendDataCallback(self, data):
+        print("serialWritersendDataCallback")
         self.__serialPort.writeRaw(data)
 
+    def baudRateGeneratorSendDataCallback(self, data):
+        #self.__serialPort.writeRaw(data)
+        print("baudRateGeneratorSendDataCallback")
+        self.__serialPort.writeRaw(data)
 
 if __name__ == "__main__":
     app = wx.App(False)

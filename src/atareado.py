@@ -349,7 +349,7 @@ class ATareado(form.MainFrame):
 
     def baudRateGeneratorSendDataCallback(self, data):
         #self.__serialPort.writeRaw(data)
-        print("baudRateGeneratorSendDataCallback")
+        #print("baudRateGeneratorSendDataCallback")
         self.__serialPort.writeRaw(data)
 
 if __name__ == "__main__":

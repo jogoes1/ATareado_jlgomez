@@ -160,6 +160,7 @@ class LocalSocket(object):
                         rx_bytes = bytearray(data)
                         self.dataReadCallback(rx_bytes)
                         #sleep(0.001)
+
                 elif ready_to_write:
                     continue
                 else:

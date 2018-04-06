@@ -33,6 +33,7 @@ class SerialConnection(object):
     receivedData = None
     receivedAnswer = None
     rawData = None
+    baudRateMode= False
 
     def __init__(self):
         self.status = False
@@ -194,53 +195,69 @@ class SerialConnection(object):
         logger.debug("exit wr")
 
     def _reader(self):
-        try:
-            answerString = ''
-            while self.status:
-                # read all that is there or wait for one byte
-                logger.debug("[R]wait")
-                readBytes = self.__serial.read(self.__serial.in_waiting or 1)
-                logger.debug("[R]rx ")
 
-                if readBytes and self.status:
-                    # Check if we are forwarding
-                    if not self.rawMode:
-                        text = self.__rx_decoder.decode(readBytes)
-                        self.rawData(text)
+        if self.baudRateMode is False:
 
-                        self.__cmdMutex.acquire()
+            try:
+                answerString = ''
+                while self.status:
+                    # read all that is there or wait for one byte
+                    logger.debug("[R]wait")
+                    readBytes = self.__serial.read(self.__serial.in_waiting or 1)
+                    #readBytes = self.__serial.read(1024)
+                    logger.debug("[R]rx ")
 
-                        if self.__waitingAnswer:
-                            answerString += text
-                            answer = self.__currCommand.checkResponse(answerString)
+                    if readBytes and self.status:
+                        # Check if we are forwarding
+                        if not self.rawMode:
+                            text = self.__rx_decoder.decode(readBytes)
+                            self.rawData(text)
 
-                            # Expected answer
-                            if answer is not None:
-                                self.__TOTimer.cancel()
-                                self.__waitingAnswer = False
-                                answerString = ''
+                            self.__cmdMutex.acquire()
 
-                                self.__cmdMutex.release()
-                                logger.debug('[' + text + ']')
-                                logger.debug("[R]Answer ok")
+                            if self.__waitingAnswer:
+                                answerString += text
+                                answer = self.__currCommand.checkResponse(answerString)
 
-                                self.receivedAnswer(answer)
-                                self.__cmdProcesssedEvent.set()
+                                # Expected answer
+                                if answer is not None:
+                                    self.__TOTimer.cancel()
+                                    self.__waitingAnswer = False
+                                    answerString = ''
+
+                                    self.__cmdMutex.release()
+                                    logger.debug('[' + text + ']')
+                                    logger.debug("[R]Answer ok")
+
+                                    self.receivedAnswer(answer)
+                                    self.__cmdProcesssedEvent.set()
+                                else:
+                                    self.__cmdMutex.release()
+                                    logger.debug('[' + text + ']')
+
                             else:
                                 self.__cmdMutex.release()
-                                logger.debug('[' + text + ']')
+                                # Aqui se reciben los datos
+                                print "Length datos recibidos = ",len(text)
+                                self.receivedData(text)
 
+                                if text == "B":
+                                    self.__baudrateMode=True
+                                    print "baudRateMode = ON"
+
+
+                                logger.debug('<'+text+'>')
                         else:
-                            self.__cmdMutex.release()
-                            self.receivedData(text)
-                            logger.debug('<'+text+'>')
-                    else:
-                        logger.debug('{' + text + '}')
-                        self.receivedData(readBytes)
-                        
-        except serial.SerialException:
-            self.status = False
-        logger.debug("exit rd")
+                            logger.debug('{' + text + '}')
+                            self.receivedData(readBytes)
+
+            except serial.SerialException:
+                self.status = False
+            logger.debug("exit rd")
+
+        else:
+            print "Baudrate Mode"
+            self.readerBaudRate()
 
     def writeDirect(self, data):
         try:
@@ -258,6 +275,20 @@ class SerialConnection(object):
     def writeRaw(self, data):
         if self.status:
             self.__serial.write(data)
+
+    def in_waiting(self):
+        return self.__serial.in_waiting
+
+    def read(self):
+        return self.__serial.read
+
+    def readerBaudRate(self):
+
+        readBytes = self.__serial.read(self.__serial.in_waiting)
+        text = self.__rx_decoder.decode(readBytes)
+        print "Length datos recibidos = ", len(text)
+        self.receivedData(text)
+        logger.debug('<' + text + '>')
 
 
 def printerCallback(data):

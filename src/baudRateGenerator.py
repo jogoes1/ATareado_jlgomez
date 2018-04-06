@@ -50,7 +50,7 @@ class BaudRateGenerator(object):
     def __baudRateGeneratorLoop(self):
 
         #TODO: Cambiar este parámetro por un field de la clase para ver el número de paquetes de 1024 bytes que enviamos
-        veces = 100
+        veces = 1
 
         while self.running:
 

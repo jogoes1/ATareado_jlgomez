@@ -6,6 +6,7 @@ from Log import logger
 
 class SerialWriter(object):
 
+
     sendData = None
 
     def __init__(self):

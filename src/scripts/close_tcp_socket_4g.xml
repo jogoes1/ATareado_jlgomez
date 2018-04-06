@@ -1,0 +1,4 @@
+<ATSCRIPT>
+    <cmd id="CIPCLOSE" setMode="1" params="0" />
+    <cmd id="NETCLOSE" setMode="0" params="0" />
+</ATSCRIPT>

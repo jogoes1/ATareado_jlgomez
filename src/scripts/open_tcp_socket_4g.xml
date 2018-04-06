@@ -1,0 +1,5 @@
+<ATSCRIPT>
+    <cmd id="CIPMODE" setMode="1" params="1" />
+    <cmd id="NETOPEN" setMode="" params="" />
+    <cmd id="CIPOPEN" setMode="1" params="TCP|18.220.184.30|5001" />
+</ATSCRIPT>

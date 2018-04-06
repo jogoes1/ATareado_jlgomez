@@ -156,6 +156,9 @@ class ATareado(form.MainFrame):
 
 
     def close_remote_conn_buttonOnButtonClick(self, event):
+
+        print "connect_remote_buttonOnButtonClick(self):"
+
         self.__socketRedirection = False
         if self.__serialPort.status:
             self.__serialPort.writeDirect("+++")
@@ -168,6 +171,8 @@ class ATareado(form.MainFrame):
             self.__localSocket.stop()
 
     def connect_remote_buttonOnButtonClick(self, event):
+
+        print "connect_remote_buttonOnButtonClick(self):"
         if self.__serialPort.status:
             if not self.__serialPort.rawMode:
                 params = [self.conntype_combo.GetValue(),
@@ -208,11 +213,15 @@ class ATareado(form.MainFrame):
         =============================
     '''
     def localSocketConnectionOpen(self):
+
+
         self.__socketRedirection = True
         logger.info("Local socket, connection open")
         wx.CallAfter(pub.sendMessage, "AppendLogText", text='Local socket connected\nBridge enabled')
 
     def localSocketConnectionClosed(self):
+        print "localSocketConnectionClosed(self):"
+        logger.info("Local socket, connection open")
         self.__socketRedirection = False
 
     def localSocketDataRead(self, data):

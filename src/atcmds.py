@@ -3,6 +3,7 @@ import sys
 from pprint import pprint
 from Log import logger
 
+#SIM5300EA COMMANDS
 AT_CMD_ID       = 'AT'       # Check connection
 ATI_CMD_ID      = 'ATI'      # Get modem Info
 CGMI_CMD_ID     = 'CGMI'     # Manufacturer
@@ -23,6 +24,14 @@ CIPSTART_CMD_ID = 'CIPSTART'
 CIPSEND_CMD_ID  = 'CIPSEND'
 CIPCLOSE_CMD_ID = 'CIPCLOSE'
 CIPCCFG_CMD_ID  = 'CIPCCFG'
+
+#SIMC7600E COMMANDS
+AT_NETOPEN_ID = 'NETOPEN'   # Open network
+AT_CIPOPEN_ID = 'CIPOPEN'   # Connect to socket
+AT_CIPCLOSE_ID = 'CIPCLOSE' # Close socket
+AT_NETCLOSE_ID = 'NETCLOSE' # Close network
+
+
 
 # Command List [id, [command, params tx, rx params parse, description]]
 # Description:
@@ -51,7 +60,13 @@ commandsList = {AT_CMD_ID:      ['AT', '', '', 'Alive'],
                 CIPSHUT_CMD_ID: ['AT+CIPSHUT', '', '(.*OK)', 'Shut down TCP/UDP connection'],
                 CIPSEND_CMD_ID: ['AT+CIPSEND', '', '>', 'Send data through IP'], # Do not use this command, send it raw instead
                 CIPCLOSE_CMD_ID:['AT+CIPCLOSE', '', '', 'Close TCP/UDP connection'],
-                CIPCCFG_CMD_ID: ['AT+CIPCCFG', '', '', 'Configure transparent mode']}
+                CIPCCFG_CMD_ID: ['AT+CIPCCFG', '', '', 'Configure transparent mode'],
+                AT_NETOPEN_ID:  ['AT+NETOPEN', '', '', 'Network open'],
+                AT_CIPOPEN_ID:  ['AT+CIPOPEN','0,"TCP","18.220.184.30",5001','','Start TCP/UDP conn 4G'],
+                AT_CIPCLOSE_ID: ['AT+CIPCLOSE', '0', '', 'Close socket'],
+                AT_NETCLOSE_ID:  ['AT+NETCLOSE', '0', '', 'Network closed']
+                }
+
 
 class ATresponse(object):
 
